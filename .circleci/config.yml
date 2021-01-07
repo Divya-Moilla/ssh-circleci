@@ -1,15 +1,18 @@
 version: 2.1
 orbs:
-  ssh-deployment: arturgontijo/ssh-deployment@dev:0.0.1
-jobs:
-  service-1:
-    docker:
-      - image: 'circleci/python:3.7.1'
-    steps:
-      - ssh-deployment/deploy:
-          ssh-host: ${SSH_HOST}
-          ssh-user: ${SSH_USER}
+  ssh-deployment: arturgontijo/ssh-deployment@1.1.20
 workflows:
-  test-services:
+  deploy_application:
     jobs:
-      - service-1
+      - ssh-deployment/deploy:
+          ssh-host: 35.173.128.153
+          ssh-user: ubuntu
+          git-repo: ssh-circleci
+          git-branch: master
+          mainnet-port: '7000'
+          run-command: docker build -t redis .
+          test-command: docker build -t redis .
+          docker-test-files: 'Dockerfile'
+          docker-file-path: Dockerfile
+          docker-image: redis
+          docker-container: redis
